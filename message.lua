@@ -1,7 +1,7 @@
 local internet = require("internet")
 local term = require("term")
 local json = require("json")
-local password = "PWC<3"
+local password = "passwordhere"
 local headers = {
       ["Content-Type"] = "application/json",
       ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
@@ -60,7 +60,7 @@ if attempt == password then
       if message == "Logout" then
         break
     end
- 
+
       if message == ":catnod:" then
         message = "<a:catnod:1007603181083181087>"
     end
@@ -94,7 +94,7 @@ if attempt == password then
     }
   },
   username = "CMP",
-  avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
+  avatar_url = "[any square image url]"
 }
  
   internet.request(url, json.encode(contents), headers, "POST")
