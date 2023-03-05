@@ -1,6 +1,6 @@
 local term = require "term"
 local options = dofile("options.lua")
-
+ 
 -- helper function to save options to file
 local function saveOptions()
   local file = io.open("options.lua", "w")
