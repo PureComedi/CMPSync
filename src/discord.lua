@@ -1,7 +1,7 @@
 local internet = require("internet")
 local term = require("term")
 local json = require("json")
-local password = "PWC<3"
+local password = "password"
 local replacements = dofile("replacements.lua")
 local headers = {
     ["Content-Type"] = "application/json",
