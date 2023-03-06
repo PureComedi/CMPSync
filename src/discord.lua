@@ -4,8 +4,8 @@ local json = require("json")
 local password = "PWC<3"
 local replacements = dofile("replacements.lua")
 local headers = {
-      ["Content-Type"] = "application/json",
-      ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
+    ["Content-Type"] = "application/json",
+    ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
 }
 
 term.clear()
@@ -79,17 +79,7 @@ while true do
     end
 
     if args[1] == "<Embed>" then
-        contents = {
-            embeds = {
-                {
-                    title = args[2],
-                    description = args[3],
-                    color = args[4]
-                }
-            },
-            username = "CMP" .. " - " .. lusername,
-            avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
-        }
+        contents = embed(message)
     else
         contents = {
             content = message,
@@ -119,3 +109,31 @@ term.clear()
 print("Logging out")
 os.execute("sleep 2")
 term.clear()
+
+function embed(message)
+    local embedArgs = {}
+    local lastArg = nil
+    for index in string.gmatch(message, "%S+") do
+        if index:sub(1,2) == "--" then
+            lastArg = index:sub(3)
+            embedArgs[lastArg] = ""
+        elseif lastArg then
+            embedArgs[lastArg] = index
+            lastArg = nil
+        end
+    end
+
+    contents = {
+        embeds = {
+            {
+                title = embedArgs["title"] or "",
+                description = embedArgs["description"] or "",
+                color = embedArgs["color"] or "#121212"
+            }
+        },
+        username = "CMP" .. " - " .. lusername,
+        avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
+    }
+
+    return contents
+end
