@@ -2,10 +2,13 @@ local internet = require("internet")
 local term = require("term")
 local json = require("json")
 local password = "passwordhere"
+local replacements = dofile("replacements.lua")
 local headers = {
       ["Content-Type"] = "application/json",
       ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
 }
+ 
+term.clear()
  
 print("Username:")
  
@@ -18,7 +21,7 @@ print("Password:")
 io.write()
  
 local attempt = io.read()
-
+ 
 term.clear()
  
 if attempt == password then
@@ -36,7 +39,7 @@ if attempt == password then
   local url = options[choice].value
  
   term.clear()
-
+ 
   local contents = {
   embeds = {  
     {
@@ -60,17 +63,11 @@ if attempt == password then
       if message == "Logout" then
         break
     end
-
-      if message == ":catnod:" then
-        message = "<a:catnod:1007603181083181087>"
-    end
  
-      if message == ":grr:" then
-        message = "<:grr:964871189166182420>"
-    end
- 
-      if message == ":clueless:" then
-        message = "<:clueless:910735716894511136>"
+    for i = 1, #replacements do
+      if message == replacements[i][1] then
+        message = replacements[i][2]
+      end
     end
  
     local contents = {
@@ -94,7 +91,7 @@ if attempt == password then
     }
   },
   username = "CMP",
-  avatar_url = "[any square image url]"
+  avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
 }
  
   internet.request(url, json.encode(contents), headers, "POST")
