@@ -74,18 +74,30 @@ while true do
         end
     end
 
-    if args[1] == "Logout" then
+    if message == "Logout" then
         break
     end
 
-    local contents = {
-        content = message,
-        username = "CMP" .. " - " .. lusername,
-        avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
-    }
-
+    if args[1] == "<Embed>" then
+        contents = {
+            embeds = {
+                {
+                    title = args[2],
+                    description = args[3],
+                    color = args[4]
+                }
+            },
+            username = "CMP" .. " - " .. lusername,
+            avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
+        }
+    else
+        contents = {
+            content = message,
+            username = "CMP" .. " - " .. lusername,
+            avatar_url = "https://cdn.discordapp.com/attachments/795312360226947104/1078978654572396694/p.png?size=4096"
+        }
+    end
     internet.request(url, json.encode(contents), headers, "POST")
-
     io.write()
 end
 
