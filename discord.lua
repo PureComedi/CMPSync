@@ -9,52 +9,34 @@ local headers = {
       ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
 }
 
-local screenWidth, screenHeight = gpu.getResolution()
-local centerX = math.floor(screenWidth / 2)
-local centerY = math.floor(screenHeight / 2)
-local duration = 2 -- Define the duration of the animation in seconds
-local frameRate = 60 -- Define the frame rate of the animation in frames per second
-local numFrames = duration * frameRate -- Define the number of frames in the animation
-local frameDelay = 1000 / frameRate -- Define the delay between frames in milliseconds
-local bootscrn = {
+local gpu = component.gpu
+
+local ascii = {
 "   _____   __  __   _____  ",
 "  / ____| |  \\/  | |  __ \\ ",
 " | |      | \\  / | | |__) |",
 " | |      | |\\/| | |  ___/ ",
 " | |____  | |  | | | |     ",
-"  \\_____| |_|  |_| |_|     ",
-"                            ",
-"            PCmdi™          "
+"  \\_____| |_|  |_| |_|     "
 }
-local gpu = component.gpu
 
+local screenWidth, screenHeight = gpu.getResolution()
+local centerX = math.floor(screenWidth / 2)
+local centerY = math.floor(screenHeight / 2)
 
-gpu.fill(1, 1, screenWidth, screenHeight, " ")
+term.clear()
 
--- Define the alpha value of the art at each frame
-local alphas = {}
-for i = 1, numFrames do
-  local alpha = 1 - (i - 1) / (numFrames - 1)
-  alphas[i] = alpha
+for i, line in ipairs(ascii) do
+  local lineX = centerX - math.floor(#line / 2)
+  gpu.set(lineX, centerY - math.ceil(#ascii / 2) + i - 1, line)
 end
 
--- Loop over each frame of the animation
-for i = 1, numFrames do
-  -- Calculate the current alpha value of the art
-  local alpha = alphas[i]
-
-  -- Clear the screen
-  gpu.fill(1, 1, screenWidth, screenHeight, " ")
-
-  -- Print the boot screen logo with the current alpha value
-  for j, line in ipairs(bootscrn) do
-    local lineX = centerX - math.floor(#line / 2)
-    local lineY = centerY - math.ceil(#bootscrn / 2) + j - 1
-    gpu.setForeground(0xFFFFFF, alpha)
-    gpu.set(lineX, lineY, line)
-  end
-
-  os.sleep(frameDelay / 1000)
+local slideDelay = 1 
+local slideDistance = #ascii + 1
+os.sleep(slideDelay)
+for i = 0, slideDistance do
+  gpu.copy(1, i + 1, screenWidth, screenHeight - i, 0, -i)
+  os.sleep(0.05)
 end
 
 term.clear()
