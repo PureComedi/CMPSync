@@ -1,4 +1,3 @@
-local gpu = component.gpu
 local internet = require("internet")
 local component = require("component")
 local term = require("term")
@@ -27,6 +26,8 @@ local bootscrn = {
 "                            ",
 "            PCmdi™          "
 }
+local gpu = component.gpu
+
 
 gpu.fill(1, 1, screenWidth, screenHeight, " ")
 
