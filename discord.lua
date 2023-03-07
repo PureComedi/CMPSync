@@ -54,23 +54,7 @@ io.write()
 local attempt = io.read()
  
 term.clear()
- 
-if attempt == password then
- 
-  local options = dofile("options.lua")
- 
-  for i, option in ipairs(options) do
-    print(i .. ". " .. option.name)
- 
-  end
- 
-  io.write()
-  local choice = tonumber(io.read())
- 
-  local url = options[choice].value
-  
-term.clear()
- 
+
 if attempt == password then
  
   local options = dofile("options.lua")
