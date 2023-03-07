@@ -47,9 +47,9 @@ for i = 1, numFrames do
   gpu.fill(1, 1, screenWidth, screenHeight, " ")
 
   -- Print the boot screen logo with the current alpha value
-  for j, line in ipairs(ascii) do
+  for j, line in ipairs(bootscrn) do
     local lineX = centerX - math.floor(#line / 2)
-    local lineY = centerY - math.ceil(#ascii / 2) + j - 1
+    local lineY = centerY - math.ceil(#bootscrn / 2) + j - 1
     gpu.setForeground(0xFFFFFF, alpha)
     gpu.set(lineX, lineY, line)
   end
