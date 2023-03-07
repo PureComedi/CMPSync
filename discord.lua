@@ -14,7 +14,7 @@ local gpu = component.gpu
 local ascii = {
 "   _____   __  __   _____  ",
 "  / ____| |  \\/  | |  __ \\ ",
-" | |      | \\  / | | |__) |", --Yes, this is the only way I came up with
+" | |      | \\  / | | |__) |",
 " | |      | |\\/| | |  ___/ ",
 " | |____  | |  | | | |     ",
 "  \\_____| |_|  |_| |_|     "
@@ -22,13 +22,13 @@ local ascii = {
 
 local screenWidth, screenHeight = gpu.getResolution()
 local centerX = math.floor(screenWidth / 2)
-local centerY = math.floor(screenHeight / 2) - math.floor(#ascii / 2)
+local centerY = math.floor(screenHeight / 2)
 
 term.clear()
 
 for i, line in ipairs(ascii) do
   local lineX = centerX - math.floor(#line / 2)
-  gpu.set(lineX, centerY + i - 1, line)
+  gpu.set(lineX, centerY - math.ceil(#ascii / 2) + i - 1, line)
 end
 
 local slideDelay = 1 
@@ -40,21 +40,35 @@ for i = 0, slideDistance do
 end
 
 term.clear()
-
-local usernameY = centerY + #ascii + 2
-local passwordY = usernameY + 2
-
-gpu.set(centerX - 4, usernameY, "Username:") --Centered the login thingies
-gpu.set(centerX - 4, passwordY, "Password:")
-
-io.write("", centerX - 1, usernameY)
-
+ 
+print("Username:")
+ 
+io.write()
+ 
 local lusername = io.read()
-
-io.write("", centerX - 1, passwordY)
-
+ 
+print("Password:")
+ 
+io.write()
+ 
 local attempt = io.read()
  
+term.clear()
+ 
+if attempt == password then
+ 
+  local options = dofile("options.lua")
+ 
+  for i, option in ipairs(options) do
+    print(i .. ". " .. option.name)
+ 
+  end
+ 
+  io.write()
+  local choice = tonumber(io.read())
+ 
+  local url = options[choice].value
+  
 term.clear()
  
 if attempt == password then
