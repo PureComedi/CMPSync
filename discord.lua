@@ -95,6 +95,7 @@ function json.encode(val)
 end
 
 local gpu = component.gpu
+local screenWidth, screenHeight = gpu.getResolution()
 
 local function ExitButton()
   local ButtonWidth = 5
@@ -126,7 +127,6 @@ local ascii = {
 "  \\_____| |_|  |_| |_|     "
 }
 
-local screenWidth, screenHeight = gpu.getResolution()
 local centerX = math.floor(screenWidth / 2)
 local centerY = math.floor(screenHeight / 2)
 
