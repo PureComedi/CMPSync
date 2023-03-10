@@ -1,6 +1,7 @@
 local internet = require("internet")
 local component = require("component")
 local term = require("term")
+local shortcuts = require("shortcuts")
 local password = "passwordhere"
 local headers = {
       ["Content-Type"] = "application/json",
@@ -394,7 +395,7 @@ if attempt == password then
           
           -- function to list existing options
           local function listOptions()
-            print("Existing shorctus:")
+            print("Existing shortcuts:")
             for i, option in ipairs(options) do
               print(i .. ". " .. option[1])
             end
