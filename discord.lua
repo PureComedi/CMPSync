@@ -222,6 +222,7 @@ if attempt == password then
         print("Invalid choice.")
       end
     end
+  end
 
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
