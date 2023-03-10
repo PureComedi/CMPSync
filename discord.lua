@@ -217,6 +217,7 @@ if attempt == password then
         listOptions()
       elseif choice == 4 then
         term.clear()
+        goto FTS
         break
       else
         print("Invalid choice.")
@@ -224,6 +225,7 @@ if attempt == password then
     end
   end
 
+  ::FTS::
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
  
