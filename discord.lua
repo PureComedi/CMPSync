@@ -96,6 +96,27 @@ end
 
 local gpu = component.gpu
 
+local function ExitButton()
+  local ButtonWidth = 5
+  local ButtonHeight = 5
+  local ButtonX = screenWidth - ButtonWidth + 1
+  local ButtonY = 1
+
+  gpu.set(ButtonX, ButtonY, "X")
+  gpu.fill(ButtonX + 1, ButtonY + 1, ButtonWidth - 2, ButtonHeight - 2, " ")
+
+  -- Wait for the user to click on the X button
+  repeat
+    local _, _, x, y = event.pull()
+  until x >= ButtonX and x <= ButtonX + ButtonWidth - 1 and y >= ButtonY and y <= ButtonY + ButtonHeight - 1
+
+  -- Clean up the screen by redrawing the X button
+  gpu.fill(ButtonX, ButtonY, ButtonWidth, ButtonHeight, " ")
+  end
+
+
+
+
 local ascii = {
 "   _____   __  __   _____  ",
 "  / ____| |  \\/  | |  __ \\ ",
@@ -110,6 +131,7 @@ local centerX = math.floor(screenWidth / 2)
 local centerY = math.floor(screenHeight / 2)
 
 term.clear()
+ExitButton()
 
 for i, line in ipairs(ascii) do
   local lineX = centerX - math.floor(#line / 2)
@@ -125,7 +147,9 @@ for i = 0, slideDistance do
 end
 
 term.clear()
- 
+ExitButton()
+
+
 print("Username:")
  
 io.write()
@@ -139,6 +163,7 @@ io.write()
 local attempt = io.read()
  
 term.clear()
+ExitButton()
 
 if attempt == password then
 
@@ -204,20 +229,24 @@ if attempt == password then
       print("1. Add a server")
       print("2. Remove a server")
       print("3. List existing servers")
-      print("4. Exit")
+      print("4. Back")
       io.write()
       local choice = tonumber(io.read())
       if choice == 1 then
         term.clear()
+ExitButton()
         addOption()
       elseif choice == 2 then
         term.clear()
+ExitButton()
         removeOption()
       elseif choice == 3 then
         term.clear()
+ExitButton()
         listOptions()
       elseif choice == 4 then
         term.clear()
+ExitButton()
         break
       else
         print("Invalid choice.")
@@ -236,6 +265,7 @@ if attempt == password then
   local url = options[choice].value
  
   term.clear()
+ExitButton()
  
   local contents = {
   embeds = {  
@@ -327,20 +357,24 @@ if attempt == password then
             print("1. Add a server")
             print("2. Remove a server")
             print("3. List existing servers")
-            print("4. Exit")
+            print("4. Back")
             io.write()
             local choice = tonumber(io.read())
             if choice == 1 then
               term.clear()
+ExitButton()
               addOption()
             elseif choice == 2 then
               term.clear()
+ExitButton()
               removeOption()
             elseif choice == 3 then
               term.clear()
+ExitButton()
               listOptions()
             elseif choice == 4 then
               term.clear()
+ExitButton()
               break
             else
               print("Invalid choice.")
@@ -408,20 +442,24 @@ if attempt == password then
             print("1. Add a shortcut")
             print("2. Remove a shortcut")
             print("3. List existing shortcuts")
-            print("4. Exit")
+            print("4. Back")
             io.write()
             local choice = tonumber(io.read())
             if choice == 1 then
               term.clear()
+ExitButton()
               addOption()
             elseif choice == 2 then
               term.clear()
+ExitButton()
               removeOption()
             elseif choice == 3 then
               term.clear()
+ExitButton()
               listOptions()
             elseif choice == 4 then
               term.clear()
+ExitButton()
               break
             else
               print("Invalid choice.")
@@ -465,9 +503,11 @@ if attempt == password then
   internet.request(url, json.encode(contents), headers, "POST")
  
   term.clear()
+ExitButton()
   print("Logging out")
   os.execute("sleep 2")
   term.clear()
+ExitButton()
 else
  
 print("Exiting")
