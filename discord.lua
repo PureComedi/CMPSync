@@ -94,16 +94,6 @@ function json.encode(val)
   return ( encode(val) )
 end
 
-local internet = require("internet")
-local component = require("component")
-local term = require("term")
-local password = "passwordhere"
-local replacements = dofile("replacements.lua")
-local headers = {
-      ["Content-Type"] = "application/json",
-      ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
-}
-
 local gpu = component.gpu
 
 local ascii = {
@@ -151,8 +141,11 @@ local attempt = io.read()
 term.clear()
 
 if attempt == password then
- 
+
   local options = dofile("options.lua")
+
+  if options == 0 then
+    goto Servers
  
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
@@ -197,6 +190,7 @@ if attempt == password then
         print("2. Replacements")
         local setting_choice = io.read()
         if setting_choice == "1" then
+          ::Servers::
           local term = require "term"
           local options = dofile("options.lua")
            
