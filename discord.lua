@@ -143,7 +143,7 @@ if attempt == password then
 
   local options = dofile("options.lua")
 
-  if options == 0 then
+  if next(options) == nil then
     FTS = true 
   else
     FTS = false
