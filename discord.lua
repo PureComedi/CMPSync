@@ -2,7 +2,6 @@ local internet = require("internet")
 local component = require("component")
 local term = require("term")
 local password = "passwordhere"
-local replacements = dofile("replacements.lua")
 local headers = {
       ["Content-Type"] = "application/json",
       ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
@@ -145,9 +144,11 @@ if attempt == password then
   local options = dofile("options.lua")
 
   if options == 0 then
-    goto Servers
-  end
-  
+    FTS = true 
+  else
+    FTS = false
+  end 
+
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
  
@@ -188,10 +189,9 @@ if attempt == password then
       elseif message == "Settings" then
         print("Select a setting to modify")
         print("1. Servers")
-        print("2. Replacements")
+        print("2. Shortcuts")
         local setting_choice = io.read()
-        if setting_choice == "1" then
-          ::Servers::
+        if setting_choice == "1" or (FTS == true) then
           local term = require "term"
           local options = dofile("options.lua")
            
@@ -208,10 +208,10 @@ if attempt == password then
           
           -- function to add a new option
           local function addOption()
-            print("Enter a name for the new option:")
+            print("Enter a name for the new server:")
             io.write()
             local name = io.read()
-            print("Enter a value for the new option:")
+            print("Enter a webhook link for the new server:")
             io.write()
             local value = io.read()
             table.insert(options, {name = name, value = value})
@@ -221,7 +221,7 @@ if attempt == password then
           
           -- function to remove an existing option
           local function removeOption()
-            print("Enter the number of the option you want to remove:")
+            print("Enter the number of the server you want to remove:")
             for i, option in ipairs(options) do
               print(i .. ". " .. option.name)
             end
@@ -230,7 +230,7 @@ if attempt == password then
             if choice and options[choice] then
               table.remove(options, choice)
               saveOptions()
-              print("Option removed.")    
+              print("Server removed.")    
             else
               print("Invalid choice.")
             end
@@ -247,10 +247,10 @@ if attempt == password then
           -- main loop
           while true do
             print("\n")
-            print("Select an option:")
-            print("1. Add an option")
-            print("2. Remove an option")
-            print("3. List existing options")
+            print("Select a subcommand:")
+            print("1. Add a server")
+            print("2. Remove a server")
+            print("3. List existing servers")
             print("4. Exit")
             io.write()
             local choice = tonumber(io.read())
@@ -274,11 +274,11 @@ if attempt == password then
 
         elseif setting_choice == "2" then
           local term = require "term"
-          local options = dofile("replacements.lua")
+          local options = dofile("shortcuts.lua")
           
           -- helper function to save options to file
           local function saveOptions()
-            local file = io.open("replacements.lua", "w")
+            local file = io.open("shortcuts.lua", "w")
             file:write("return {\n")
             for i, option in ipairs(options) do
               file:write(string.format("  {%q, %q},\n", option[1], option[2]))
@@ -289,20 +289,20 @@ if attempt == password then
           
           -- function to add a new option
           local function addOption()
-            print("Enter a name for the new option:")
+            print("Enter the name of the shortcut:")
             io.write()
             local name = io.read()
-            print("Enter a value for the new option:")
+            print("Enter what you want it to be replaced with:")
             io.write()
             local value = io.read()
             table.insert(options, {name, value})
             saveOptions()
-            print("Option added.")
+            print("Shortcut added.")
           end
           
           -- function to remove an existing option
           local function removeOption()
-            print("Enter the number of the option you want to remove:")
+            print("Enter the number of the shortcut you want to remove:")
             for i, option in ipairs(options) do
               print(i .. ". " .. option[1] .. " => " .. option[2])
             end
@@ -311,7 +311,7 @@ if attempt == password then
             if choice and options[choice] then
               table.remove(options, choice)
               saveOptions()
-              print("Option removed.")
+              print("Shortcut removed.")
             else
               print("Invalid choice.")
             end
@@ -319,7 +319,7 @@ if attempt == password then
           
           -- function to list existing options
           local function listOptions()
-            print("Existing options:")
+            print("Existing shorctus:")
             for i, option in ipairs(options) do
               print(i .. ". " .. option[1])
             end
@@ -329,9 +329,9 @@ if attempt == password then
           while true do
             print("\n")
             print("Select an option:")
-            print("1. Add an option")
-            print("2. Remove an option")
-            print("3. List existing options")
+            print("1. Add a shortcut")
+            print("2. Remove a shortcut")
+            print("3. List existing shortcuts")
             print("4. Exit")
             io.write()
             local choice = tonumber(io.read())
@@ -356,9 +356,9 @@ if attempt == password then
         io.write()
       end
 
-    for i = 1, #replacements do
-      if message == replacements[i][1] then
-        message = replacements[i][2]
+    for i = 1, #shortcuts do
+      if message == shortcuts[i][1] then
+        message = shortcuts[i][2]
       end
     end
  
