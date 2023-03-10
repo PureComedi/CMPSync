@@ -351,11 +351,11 @@ if attempt == password then
 
         elseif setting_choice == "2" then
           local term = require "term"
-          local options = dofile("shortcuts.lua")
+          local options = dofile("replacements.lua")
           
           -- helper function to save options to file
           local function saveOptions()
-            local file = io.open("shortcuts.lua", "w")
+            local file = io.open("replacements.lua", "w")
             file:write("return {\n")
             for i, option in ipairs(options) do
               file:write(string.format("  {%q, %q},\n", option[1], option[2]))
@@ -396,7 +396,7 @@ if attempt == password then
           
           -- function to list existing options
           local function listOptions()
-            print("Existing shorctus:")
+            print("Existing shortcuts:")
             for i, option in ipairs(options) do
               print(i .. ". " .. option[1])
             end
@@ -433,9 +433,9 @@ if attempt == password then
         io.write()
       end
 
-    for i = 1, #shortcuts do
-      if message == shortcuts[i][1] then
-        message = shortcuts[i][2]
+    for i = 1, #replacements do
+      if message == replacements[i][1] then
+        message = replacements[i][2]
       end
     end
  
