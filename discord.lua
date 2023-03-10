@@ -92,7 +92,6 @@ encode = function(val, stack)
 end
 function json.encode(val)
   return ( encode(val) )
-  end
 end
 
 local internet = require("internet")
