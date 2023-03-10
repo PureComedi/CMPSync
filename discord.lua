@@ -146,7 +146,8 @@ if attempt == password then
 
   if options == 0 then
     goto Servers
- 
+  end
+  
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
  
