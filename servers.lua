@@ -61,13 +61,13 @@ while true do
   io.write()
   local choice = tonumber(io.read())
   if choice == 1 then
-    term.clear
+    term.clear()
     addOption()
   elseif choice == 2 then
-    term.clear
+    term.clear()
     removeOption()
   elseif choice == 3 then
-    term.clear
+    term.clear()
     listOptions()
   elseif choice == 4 then
     term.clear()
