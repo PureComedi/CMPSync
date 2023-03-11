@@ -267,7 +267,10 @@ if attempt == password then
         print("1. Servers")
         print("2. Shortcuts")
         local setting_choice = io.read()
-        if setting_choice == "1" or (FTS == true) then
+        
+        --Servers
+
+        if setting_choice == "1" then
           local term = require "term"
           local options = dofile("options.lua")
            
@@ -348,6 +351,8 @@ if attempt == password then
           end
           goto MessageStart
 
+        --Shortcuts
+
         elseif setting_choice == "2" then
           local term = require "term"
           local options = dofile("shortcuts.lua")
@@ -357,7 +362,7 @@ if attempt == password then
             local file = io.open("shortcuts.lua", "w")
             file:write("return {\n")
             for i, option in ipairs(options) do
-              file:write(string.format("  {%q, %q},\n", option[1], option[2]))
+              file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
             end
             file:write("}\n")
             file:close()
@@ -371,7 +376,7 @@ if attempt == password then
             print("Enter what you want it to be replaced with:")
             io.write()
             local value = io.read()
-            table.insert(options, {name, value})
+            table.insert(options, {name = name, value = value})
             saveOptions()
             print("Shortcut added.")
           end
@@ -380,7 +385,7 @@ if attempt == password then
           local function removeOption()
             print("Enter the number of the shortcut you want to remove:")
             for i, option in ipairs(options) do
-              print(i .. ". " .. option[1] .. " => " .. option[2])
+              print(i .. ". " .. option.name .. " => " .. option.value)
             end
             io.write()
             local choice = tonumber(io.read())
@@ -397,14 +402,14 @@ if attempt == password then
           local function listOptions()
             print("Existing shortcuts:")
             for i, option in ipairs(options) do
-              print(i .. ". " .. option[1])
+              print(i .. ". " .. option.name)
             end
           end
           
           -- main loop
           while true do
             print("\n")
-            print("Select an option:")
+            print("Select a subcommand:")
             print("1. Add a shortcut")
             print("2. Remove a shortcut")
             print("3. List existing shortcuts")
@@ -433,8 +438,8 @@ if attempt == password then
       end
 
     for i = 1, #shortcuts do
-      if message == shortcuts[i][1] then
-        message = shortcuts[i][2]
+      if message == shortcuts[i].name then
+        message = shortcuts[i].value
       end
     end
  
