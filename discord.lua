@@ -1,7 +1,6 @@
 local internet = require("internet")
 local component = require("component")
 local term = require("term")
-local shortcuts = require("shortcuts")
 local password = "passwordhere"
 local headers = {
       ["Content-Type"] = "application/json",
@@ -437,11 +436,15 @@ if attempt == password then
         io.write()
       end
 
+    local shortcuts = dofile("shortcuts.lua")
+    
     for i = 1, #shortcuts do
-      if message == shortcuts[i].name then
+      if shortcuts[i].name == message then
         message = shortcuts[i].value
+        break
       end
     end
+      
  
     local contents = {
       
