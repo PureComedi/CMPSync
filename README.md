@@ -9,7 +9,7 @@
 \
 **Installation** :
 
-**oppm register PireComedi/CMPSync\
+**oppm register PureComedi/CMPSync\
 oppm install CMP**
 
 or
