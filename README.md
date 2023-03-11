@@ -9,8 +9,8 @@
 \
 **Installation** :
 
-~~**oppm register PureComedi/CMPSync\
-oppm install CMP**~~ bugged
+**oppm register PureComedi/CMPSync\
+oppm install CMP**
 
 or
 
