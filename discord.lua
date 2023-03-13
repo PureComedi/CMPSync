@@ -171,7 +171,7 @@ end
 
 else
   
-  io.write(Enter the password you want to be set:)
+  io.write("Enter the password you want to be set:")
   
   local file = io.open("password.txt","a")
   local salt = component.data.random(16)
