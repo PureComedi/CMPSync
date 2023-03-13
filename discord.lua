@@ -145,14 +145,11 @@ end
 
 term.clear()
 
-io.write("Username:")
+io.write("Username:\n")
 
 local loginusr = io.read()
 
-io.write("Password:")
-attempt = io.read()
-if filesystem.exists("password.txt") then 
-function checkPassword()
+function checkPassword(attempt)
   local file = io.open("password.txt")
   
   for line in file:read("*a") do
@@ -168,6 +165,11 @@ function checkPassword()
   return false
 end
 
+if filesystem.exists("password.txt") then 
+  io.write("Password:\n")
+  attempt = io.read()
+  
+
 else
   
   io.write("Enter the password you want to be set:")
@@ -178,12 +180,13 @@ else
   
   file:write(string.format("%s;%s\n",hashed,component.data.encode64(salt)))
   file:close()
+  io.write("Password:\n")
+  attempt = io.read()
 end 
-term.clear()
-
 if checkPassword(attempt) == true then
-  
--- Main code
+  term.clear()  
+
+  -- Main code
 
   local options = dofile("servers.lua")
 
