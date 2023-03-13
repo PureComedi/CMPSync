@@ -7,19 +7,18 @@ local headers = {
 local internet = require("internet")
 local component = require("component")
 local term = require("term")
-local fs = require("filesystem")
+local filesystem = require("filesystem") 
 local password = "passwordhere"
 
-local serversfile_exist = io.open("servers.lua", "r")
-if not serversfile_exist then
+
+if not filesystem.exists("servers.lua") then
   local serversfile = io.open("servers.lua", "w")
-  file:close()
+  serversfile:close()
 end
 
-local shortcutsfile_exist = io.open("shortcuts.lua", "r")
-if not shortcutsfile_exist then
-  local shortcuts = io.open("shortcuts.lua", "w")
-  file:close()
+if not filesystem.exists("shortcuts.lua") then
+  local shortcutsfile = io.open("shortcuts.lua", "w")
+  shortcutsfile:close()
 end
 
 --Dependencies
@@ -116,7 +115,7 @@ end
 
 local gpu = component.gpu
 
-local ascii = {
+local bootscreen = {
 "   _____   __  __   _____  ",
 "  / ____| |  \\/  | |  __ \\ ",
 " | |      | \\  / | | |__) |",
@@ -131,13 +130,13 @@ local centerY = math.floor(screenHeight / 2)
 
 term.clear()
 
-for i, line in ipairs(ascii) do
+for i, line in ipairs(bootscreen) do
   local lineX = centerX - math.floor(#line / 2)
-  gpu.set(lineX, centerY - math.ceil(#ascii / 2) + i - 1, line)
+  gpu.set(lineX, centerY - math.ceil(#bootscreen / 2) + i - 1, line)
 end
 
 local slideDelay = 1 
-local slideDistance = #ascii + 1
+local slideDistance = #bootscreen + 1
 os.sleep(slideDelay)
 for i = 0, slideDistance do
   gpu.copy(1, i + 1, screenWidth, screenHeight - i, 0, -i)
