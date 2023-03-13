@@ -182,7 +182,7 @@ else
 end 
 term.clear()
 
-if checkPassword() == true
+if checkPassword() == true then
   
 -- Main code
 
