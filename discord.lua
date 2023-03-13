@@ -150,7 +150,7 @@ io.write("Username:\n")
 local loginusr = io.read()
 
 local function checkPassword()
-  local file = io.open("password.txt")
+  local file = io.open("password.lua")
   
   for line in file:read("*a") do
     local salted,salt = line:match("^([^;]+);(.+)$")
@@ -165,7 +165,7 @@ local function checkPassword()
   return false
 end
 
-if filesystem.exists("password.txt") then 
+if filesystem.exists("password.lua") then 
   io.write("Password:\n")
   attempt = io.read()
   
@@ -174,7 +174,7 @@ else
   
   io.write("Enter the password you want to be set:\n")
   local password = io.read()
-  local file = io.open("password.txt","a")
+  local file = io.open("password.lua","a")
   local salt = component.data.random(16)
   local hashed = component.data.encode64(component.data.sha256(password..salt))
   
