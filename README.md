@@ -5,7 +5,7 @@
 - T1 CPU
 - T1 Screen
 - Any storage medium (floppy untested)
-  
+- **__TEMPORARILY NEEDS T2 DATA CARD__**
 \
 **Installation** :
 
