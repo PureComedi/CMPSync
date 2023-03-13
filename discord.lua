@@ -8,7 +8,6 @@ local internet = require("internet")
 local component = require("component")
 local term = require("term")
 local filesystem = require("filesystem") 
-local password = "passwordhere"
 
 local serversfile = ("servers.lua")
 if not filesystem.exists(serversfile) then
