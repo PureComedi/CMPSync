@@ -151,12 +151,12 @@ io.write("Username:")
 local loginusr = io.read()
 
 io.write("Password:")
-
-if filesystem.exists("password.txt")
-  local attempt = io.read()
-  local password = io.open("password.txt")
+attempt = io.read()
+if filesystem.exists("password.txt") then 
+local function checkPassword(attempt)
+  local file = io.open("password.txt")
   
-  for line in password:read("*a") do
+  for line in file:read("*a") do
     local salted,salt = line:match("^([^;]+);(.+)$")
     salted = component.data.decode64(salted)
     salt = component.data.decode64(salt)
@@ -165,8 +165,10 @@ if filesystem.exists("password.txt")
       return true
     end
   end
-  file:close()
+  password:close()
   return false
+end
+
 else
   
   io.write(Enter the password you want to be set:)
@@ -177,348 +179,354 @@ else
   
   file:write(string.format("%s;%s\n",hashed,component.data.encode64(salt)))
   file:close()
-
+end 
 term.clear()
 
-if attempt == not password then
-  print("Exiting")
-  break
-end
+if checkPassword() == true
+  
+-- Main code
 
-local options = dofile("servers.lua")
-
-if next(options) == nil then
-  local term = require "term"
   local options = dofile("servers.lua")
-  
-  -- function to save options to file
-  local function saveOptions()
-    local file = io.open("servers.lua", "w")
-    file:write("return {\n")
-    for i, option in ipairs(options) do
-      file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
-    end
-    file:write("}\n")
-    file:close()
-  end
-  
-  -- function to add a new option
-  local function addOption()
-    print("Enter a name for the new server:")
-    io.write()
-    local name = io.read()
-    print("Enter a webhook link for the new server:")
-    io.write()
-    local value = io.read()
-    table.insert(options, {name = name, value = value})
-    saveOptions()
-    print("Option added.")
-  end
-  
-  -- function to remove an existing option
-  local function removeOption()
-    print("Enter the number of the server you want to remove:")
-    for i, option in ipairs(options) do
-      print(i .. ". " .. option.name)
-    end
-    io.write()
-    local choice = tonumber(io.read())
-    if choice and options[choice] then
-      table.remove(options, choice)
-      saveOptions()
-      print("Server removed.")    
-    else
-      print("Invalid choice.")
-    end
-  end
-  
-  -- function to list existing options
-  local function listOptions()
-    print("Existing options:")
-    for i, option in ipairs(options) do
-      print(i .. ". " .. option.name)
-    end
-  end
-  
-  -- main loop
-  while true do
-    print("\n")
-    print("The server list is empty, add a new server")
-    print("1. Add a server")
-    print("2. Remove a server")
-    print("3. List existing servers")
-    print("4. Exit")
-    io.write()
-    local choice = tonumber(io.read())
-    if choice == 1 then
-      term.clear()
-      addOption()
-    elseif choice == 2 then
-      term.clear()
-      removeOption()
-    elseif choice == 3 then
-      term.clear()
-      listOptions()
-    elseif choice == 4 then
-      term.clear()
-      break
-    else
-      print("Invalid choice.")
-    end
-  end
-end
 
-for i, option in ipairs(options) do
-  print(i .. ". " .. option.name)
-
-end
-
-io.write()
-local choice = tonumber(io.read())
-
-local url = options[choice].value
-
-term.clear()
-
-local contents = {
-embeds = {  
-  {
-    title = "Login",
-    description = loginusr .. " just logged in!",
-    color = 5763719
-  }
-},
-username = "CMP",
-avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-}
-
-internet.request(url, json.encode(contents), headers, "POST")
-
-io.write()
-
-while true do
-
-  ::MessageStart::
-
-  local message = io.read()
-
-    if message == "Logout" then
-      break
+  if next(options) == nil then
+    local term = require "term"
+    local options = dofile("servers.lua")
     
-    elseif message == "Settings" then
-      print("Select a setting to modify")
-      print("1. Servers")
-      print("2. Shortcuts")
-      local setting_choice = io.read()
-      
-      --Servers
-
-      if setting_choice == "1" then
-        local term = require "term"
-        local options = dofile("servers.lua")
-        
-        -- function to save options to file
-        local function saveOptions()
-          local file = io.open("servers.lua", "w")
-          file:write("return {\n")
-          for i, option in ipairs(options) do
-            file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
-          end
-          file:write("}\n")
-          file:close()
-        end
-        
-        -- function to add a new option
-        local function addOption()
-          print("Enter a name for the new server:")
-          io.write()
-          local name = io.read()
-          print("Enter a webhook link for the new server:")
-          io.write()
-          local value = io.read()
-          table.insert(options, {name = name, value = value})
-          saveOptions()
-          print("Option added.")
-        end
-        
-        -- function to remove an existing option
-        local function removeOption()
-          print("Enter the number of the server you want to remove:")
-          for i, option in ipairs(options) do
-            print(i .. ". " .. option.name)
-          end
-          io.write()
-          local choice = tonumber(io.read())
-          if choice and options[choice] then
-            table.remove(options, choice)
-            saveOptions()
-            print("Server removed.")    
-          else
-            print("Invalid choice.")
-          end
-        end
-        
-        -- function to list existing options
-        local function listOptions()
-          print("Existing options:")
-          for i, option in ipairs(options) do
-            print(i .. ". " .. option.name)
-          end
-        end
-        
-        -- main loop
-        while true do
-          print("\n")
-          print("Select a subcommand:")
-          print("1. Add a server")
-          print("2. Remove a server")
-          print("3. List existing servers")
-          print("4. Exit")
-          io.write()
-          local choice = tonumber(io.read())
-          if choice == 1 then
-            term.clear()
-            addOption()
-          elseif choice == 2 then
-            term.clear()
-            removeOption()
-          elseif choice == 3 then
-            term.clear()
-            listOptions()
-          elseif choice == 4 then
-            term.clear()
-            break
-          else
-            print("Invalid choice.")
-          end
-        end
-        goto MessageStart
-
-      --Shortcuts
-
-      elseif setting_choice == "2" then
-        local term = require "term"
-        local options = dofile("shortcuts.lua")
-        
-        -- function to save options to file
-        local function saveOptions()
-          local file = io.open("shortcuts.lua", "w")
-          file:write("return {\n")
-          for i, option in ipairs(options) do
-            file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
-          end
-          file:write("}\n")
-          file:close()
-        end
-        
-        -- function to add a new option
-        local function addOption()
-          print("Enter the name of the shortcut:")
-          io.write()
-          local name = io.read()
-          print("Enter what you want it to be replaced with:")
-          io.write()
-          local value = io.read()
-          table.insert(options, {name = name, value = value})
-          saveOptions()
-          print("Shortcut added.")
-        end
-        
-        -- function to remove an existing option
-        local function removeOption()
-          print("Enter the number of the shortcut you want to remove:")
-          for i, option in ipairs(options) do
-            print(i .. ". " .. option.name .. " => " .. option.value)
-          end
-          io.write()
-          local choice = tonumber(io.read())
-          if choice and options[choice] then
-            table.remove(options, choice)
-            saveOptions()
-            print("Shortcut removed.")
-          else
-            print("Invalid choice.")
-          end
-        end
-        
-        -- function to list existing options
-        local function listOptions()
-          print("Existing shortcuts:")
-          for i, option in ipairs(options) do
-            print(i .. ". " .. option.name)
-          end
-        end
-        
-        -- main loop
-        while true do
-          print("\n")
-          print("Select a subcommand:")
-          print("1. Add a shortcut")
-          print("2. Remove a shortcut")
-          print("3. List existing shortcuts")
-          print("4. Exit")
-          io.write()
-          local choice = tonumber(io.read())
-          if choice == 1 then
-            term.clear()
-            addOption()
-          elseif choice == 2 then
-            term.clear()
-            removeOption()
-          elseif choice == 3 then
-            term.clear()
-            listOptions()
-          elseif choice == 4 then
-            term.clear()
-            break
-          else
-            print("Invalid choice.")
-          end
-        end
-        goto MessageStart
+    -- function to save options to file
+    local function saveOptions()
+      local file = io.open("servers.lua", "w")
+      file:write("return {\n")
+      for i, option in ipairs(options) do
+        file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
+      end
+      file:write("}\n")
+      file:close()
+    end
+    
+    -- function to add a new option
+    local function addOption()
+      print("Enter a name for the new server:")
+      io.write()
+      local name = io.read()
+      print("Enter a webhook link for the new server:")
+      io.write()
+      local value = io.read()
+      table.insert(options, {name = name, value = value})
+      saveOptions()
+      print("Option added.")
+    end
+    
+    -- function to remove an existing option
+    local function removeOption()
+      print("Enter the number of the server you want to remove:")
+      for i, option in ipairs(options) do
+        print(i .. ". " .. option.name)
       end
       io.write()
+      local choice = tonumber(io.read())
+      if choice and options[choice] then
+        table.remove(options, choice)
+        saveOptions()
+        print("Server removed.")    
+      else
+        print("Invalid choice.")
+      end
     end
-
-  local shortcuts = dofile("shortcuts.lua")
-  
-  for i = 1, #shortcuts do
-    if shortcuts[i].name == message then
-      message = shortcuts[i].value
-      break
+    
+    -- function to list existing options
+    local function listOptions()
+      print("Existing options:")
+      for i, option in ipairs(options) do
+        print(i .. ". " .. option.name)
+      end
+    end
+    
+    -- main loop
+    while true do
+      print("\n")
+      print("The server list is empty, add a new server")
+      print("1. Add a server")
+      print("2. Remove a server")
+      print("3. List existing servers")
+      print("4. Exit")
+      io.write()
+      local choice = tonumber(io.read())
+      if choice == 1 then
+        term.clear()
+        addOption()
+      elseif choice == 2 then
+        term.clear()
+        removeOption()
+      elseif choice == 3 then
+        term.clear()
+        listOptions()
+      elseif choice == 4 then
+        term.clear()
+        break
+      else
+        print("Invalid choice.")
+      end
     end
   end
-    
+
+  for i, option in ipairs(options) do
+    print(i .. ". " .. option.name)
+
+  end
+
+  io.write()
+  local choice = tonumber(io.read())
+
+  local url = options[choice].value
+
+  term.clear()
 
   local contents = {
-    
-    content = message,
-    username = "CMP" .. " - " .. loginusr,
-    avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-}
+  embeds = {  
+    {
+      title = "Login",
+      description = loginusr .. " just logged in!",
+      color = 5763719
+    }
+  },
+  username = "CMP",
+  avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
+  }
 
   internet.request(url, json.encode(contents), headers, "POST")
 
   io.write()
+
+  while true do
+
+    ::MessageStart::
+
+    local message = io.read()
+
+      if message == "Logout" then
+        break
+      
+      elseif message == "Settings" then
+        print("Select a setting to modify")
+        print("1. Servers")
+        print("2. Shortcuts")
+        local setting_choice = io.read()
+        
+        --Servers
+
+        if setting_choice == "1" then
+          local term = require "term"
+          local options = dofile("servers.lua")
+          
+          -- function to save options to file
+          local function saveOptions()
+            local file = io.open("servers.lua", "w")
+            file:write("return {\n")
+            for i, option in ipairs(options) do
+              file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
+            end
+            file:write("}\n")
+            file:close()
+          end
+          
+          -- function to add a new option
+          local function addOption()
+            print("Enter a name for the new server:")
+            io.write()
+            local name = io.read()
+            print("Enter a webhook link for the new server:")
+            io.write()
+            local value = io.read()
+            table.insert(options, {name = name, value = value})
+            saveOptions()
+            print("Option added.")
+          end
+          
+          -- function to remove an existing option
+          local function removeOption()
+            print("Enter the number of the server you want to remove:")
+            for i, option in ipairs(options) do
+              print(i .. ". " .. option.name)
+            end
+            io.write()
+            local choice = tonumber(io.read())
+            if choice and options[choice] then
+              table.remove(options, choice)
+              saveOptions()
+              print("Server removed.")    
+            else
+              print("Invalid choice.")
+            end
+          end
+          
+          -- function to list existing options
+          local function listOptions()
+            print("Existing options:")
+            for i, option in ipairs(options) do
+              print(i .. ". " .. option.name)
+            end
+          end
+          
+          -- main loop
+          while true do
+            print("\n")
+            print("Select a subcommand:")
+            print("1. Add a server")
+            print("2. Remove a server")
+            print("3. List existing servers")
+            print("4. Exit")
+            io.write()
+            local choice = tonumber(io.read())
+            if choice == 1 then
+              term.clear()
+              addOption()
+            elseif choice == 2 then
+              term.clear()
+              removeOption()
+            elseif choice == 3 then
+              term.clear()
+              listOptions()
+            elseif choice == 4 then
+              term.clear()
+              break
+            else
+              print("Invalid choice.")
+            end
+          end
+          goto MessageStart
+
+        --Shortcuts
+
+        elseif setting_choice == "2" then
+          local term = require "term"
+          local options = dofile("shortcuts.lua")
+          
+          -- function to save options to file
+          local function saveOptions()
+            local file = io.open("shortcuts.lua", "w")
+            file:write("return {\n")
+            for i, option in ipairs(options) do
+              file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
+            end
+            file:write("}\n")
+            file:close()
+          end
+          
+          -- function to add a new option
+          local function addOption()
+            print("Enter the name of the shortcut:")
+            io.write()
+            local name = io.read()
+            print("Enter what you want it to be replaced with:")
+            io.write()
+            local value = io.read()
+            table.insert(options, {name = name, value = value})
+            saveOptions()
+            print("Shortcut added.")
+          end
+          
+          -- function to remove an existing option
+          local function removeOption()
+            print("Enter the number of the shortcut you want to remove:")
+            for i, option in ipairs(options) do
+              print(i .. ". " .. option.name .. " => " .. option.value)
+            end
+            io.write()
+            local choice = tonumber(io.read())
+            if choice and options[choice] then
+              table.remove(options, choice)
+              saveOptions()
+              print("Shortcut removed.")
+            else
+              print("Invalid choice.")
+            end
+          end
+          
+          -- function to list existing options
+          local function listOptions()
+            print("Existing shortcuts:")
+            for i, option in ipairs(options) do
+              print(i .. ". " .. option.name)
+            end
+          end
+          
+          -- main loop
+          while true do
+            print("\n")
+            print("Select a subcommand:")
+            print("1. Add a shortcut")
+            print("2. Remove a shortcut")
+            print("3. List existing shortcuts")
+            print("4. Exit")
+            io.write()
+            local choice = tonumber(io.read())
+            if choice == 1 then
+              term.clear()
+              addOption()
+            elseif choice == 2 then
+              term.clear()
+              removeOption()
+            elseif choice == 3 then
+              term.clear()
+              listOptions()
+            elseif choice == 4 then
+              term.clear()
+              break
+            else
+              print("Invalid choice.")
+            end
+          end
+          goto MessageStart
+        end
+        io.write()
+      end
+
+    local shortcuts = dofile("shortcuts.lua")
+    
+    for i = 1, #shortcuts do
+      if shortcuts[i].name == message then
+        message = shortcuts[i].value
+        break
+      end
+    end
+      
+
+    local contents = {
+      
+      content = message,
+      username = "CMP" .. " - " .. loginusr,
+      avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
+  }
+
+    internet.request(url, json.encode(contents), headers, "POST")
+
+    io.write()
+  end
+
+  local contents = {
+  embeds = {  
+    {
+      title = "Logout",
+      description = loginusr .. " logged out.",
+      color = 15548997
+    }
+  },
+  username = "CMP",
+  avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
+  }
+
+  internet.request(url, json.encode(contents), headers, "POST")
+
+  term.clear()
+  print("Logging out")
+  os.execute("sleep 1")
+  term.clear()
+else
+  term.clear()
+  print("Exiting")
+  os.execute("sleep 1")
+  term.clear()
 end
 
-local contents = {
-embeds = {  
-  {
-    title = "Logout",
-    description = loginusr .. " logged out.",
-    color = 15548997
-  }
-},
-username = "CMP",
-avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-}
-
-internet.request(url, json.encode(contents), headers, "POST")
-
-term.clear()
-print("Logging out")
-os.execute("sleep 2")
-term.clear()
 
 --Main code
