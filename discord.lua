@@ -10,14 +10,15 @@ local term = require("term")
 local filesystem = require("filesystem") 
 local password = "passwordhere"
 
-
-if not filesystem.exists("servers.lua") then
-  local serversfile = io.open("servers.lua", "w")
+local serversfile = ("servers.lua")
+if not filesystem.exists(serversfile) then
+  local serversfile = io.open(serversfile, "w")
   serversfile:close()
 end
 
-if not filesystem.exists("shortcuts.lua") then
-  local shortcutsfile = io.open("shortcuts.lua", "w")
+local shortcutsfile = ("shortcuts.lua")
+if not filesystem.exists(shortcutsfile) then
+  local shortcutsfile = io.open(shortcutsfile, "w")
   shortcutsfile:close()
 end
 
@@ -167,7 +168,7 @@ if attempt == password then
     local term = require "term"
     local options = dofile("servers.lua")
     
-    -- helper function to save options to file
+    -- function to save options to file
     local function saveOptions()
       local file = io.open("servers.lua", "w")
       file:write("return {\n")
@@ -293,7 +294,7 @@ if attempt == password then
           local term = require "term"
           local options = dofile("servers.lua")
           
-          -- helper function to save options to file
+          -- function to save options to file
           local function saveOptions()
             local file = io.open("servers.lua", "w")
             file:write("return {\n")
@@ -376,7 +377,7 @@ if attempt == password then
           local term = require "term"
           local options = dofile("shortcuts.lua")
           
-          -- helper function to save options to file
+          -- function to save options to file
           local function saveOptions()
             local file = io.open("shortcuts.lua", "w")
             file:write("return {\n")
