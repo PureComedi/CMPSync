@@ -161,7 +161,7 @@ function checkPassword(attempt)
       return true
     end
   end
-  password:close()
+  file:close()
   return false
 end
 
