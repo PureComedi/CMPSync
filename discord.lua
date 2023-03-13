@@ -1,11 +1,32 @@
+--Dependencies
+
+local headers = {
+  ["Content-Type"] = "application/json",
+  ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
+}
 local internet = require("internet")
 local component = require("component")
 local term = require("term")
+local fs = require("filesystem")
 local password = "passwordhere"
-local headers = {
-      ["Content-Type"] = "application/json",
-      ["User-Agent"] = "MyBot (https://www.example.com, 1.0)"
-}
+
+local serversfile_exist = io.open("servers.lua", "r")
+if not serversfile_exist then
+  local serversfile = io.open("servers.lua", "w")
+  file:close()
+end
+
+local shortcutsfile_exist = io.open("shortcuts.lua", "r")
+if not shortcutsfile_exist then
+  local shortcuts = io.open("shortcuts.lua", "w")
+  file:close()
+end
+
+--Dependencies
+
+
+
+--Main code
 
 local json = { _version = "0.1.2" }
 local encode
@@ -124,32 +145,32 @@ for i = 0, slideDistance do
 end
 
 term.clear()
- 
+
 print("Username:")
- 
+
 io.write()
- 
+
 local lusername = io.read()
- 
+
 print("Password:")
- 
+
 io.write()
- 
+
 local attempt = io.read()
- 
+
 term.clear()
 
 if attempt == password then
 
-  local options = dofile("options.lua")
+  local options = dofile("servers.lua")
 
   if next(options) == nil then
     local term = require "term"
-    local options = dofile("options.lua")
-     
+    local options = dofile("servers.lua")
+    
     -- helper function to save options to file
     local function saveOptions()
-      local file = io.open("options.lua", "w")
+      local file = io.open("servers.lua", "w")
       file:write("return {\n")
       for i, option in ipairs(options) do
         file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
@@ -226,16 +247,16 @@ if attempt == password then
 
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
- 
+
   end
- 
+
   io.write()
   local choice = tonumber(io.read())
- 
+
   local url = options[choice].value
- 
+
   term.clear()
- 
+
   local contents = {
   embeds = {  
     {
@@ -247,13 +268,13 @@ if attempt == password then
   username = "CMP",
   avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
 }
- 
+
   internet.request(url, json.encode(contents), headers, "POST")
   
   io.write()
   
   while true do
- 
+
     ::MessageStart::
 
     local message = io.read()
@@ -271,11 +292,11 @@ if attempt == password then
 
         if setting_choice == "1" then
           local term = require "term"
-          local options = dofile("options.lua")
-           
+          local options = dofile("servers.lua")
+          
           -- helper function to save options to file
           local function saveOptions()
-            local file = io.open("options.lua", "w")
+            local file = io.open("servers.lua", "w")
             file:write("return {\n")
             for i, option in ipairs(options) do
               file:write(string.format("  {name = %q, value = %q},\n", option.name, option.value))
@@ -445,19 +466,19 @@ if attempt == password then
       end
     end
       
- 
+
     local contents = {
       
       content = message,
       username = "CMP" .. " - " .. lusername,
       avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
 }
- 
+
     internet.request(url, json.encode(contents), headers, "POST")
- 
+
     io.write()
   end
- 
+
   local contents = {
   embeds = {  
     {
@@ -469,15 +490,16 @@ if attempt == password then
   username = "CMP",
   avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
 }
- 
+
   internet.request(url, json.encode(contents), headers, "POST")
- 
+
   term.clear()
   print("Logging out")
   os.execute("sleep 2")
   term.clear()
 else
- 
+
 print("Exiting")
- 
+
 end
+--Main code
