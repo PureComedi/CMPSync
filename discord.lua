@@ -153,7 +153,7 @@ local loginusr = io.read()
 io.write("Password:")
 attempt = io.read()
 if filesystem.exists("password.txt") then 
-local function checkPassword(attempt)
+function checkPassword()
   local file = io.open("password.txt")
   
   for line in file:read("*a") do
@@ -182,7 +182,7 @@ else
 end 
 term.clear()
 
-if checkPassword() == true then
+if checkPassword(attempt) == true then
   
 -- Main code
 
