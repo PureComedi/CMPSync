@@ -12,12 +12,14 @@ local filesystem = require("filesystem")
 local serversfile = ("servers.lua")
 if not filesystem.exists(serversfile) then
   local serversfile = io.open(serversfile, "w")
+  file:write(string.format("return {\n}"))
   serversfile:close()
 end
 
 local shortcutsfile = ("shortcuts.lua")
 if not filesystem.exists(shortcutsfile) then
   local shortcutsfile = io.open(shortcutsfile, "w")
+  file:write(string.format("return {\n}"))  
   shortcutsfile:close()
 end
 
@@ -152,7 +154,7 @@ local loginusr = io.read()
 local function checkPassword()
   local file = io.open("password.lua")
   
-  for line in file:read("*a") do
+  for line in file:read("l") do
     local salted,salt = line:match("^([^;]+);(.+)$")
     salted = component.data.decode64(salted)
     salt = component.data.decode64(salt)
