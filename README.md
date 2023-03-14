@@ -1,11 +1,11 @@
 **Hardware Requirements** :
 - Internet Card
-- **192 kb of RAM**
+- **256 kb of RAM**
 - T1 GPU
 - T1 CPU
 - T1 Screen
 - Any storage medium (floppy untested)
-- **__TEMPORARILY NEEDS T2 DATA CARD__**
+
 \
 **Installation** :
 
