@@ -8,17 +8,18 @@ local internet = require("internet")
 local component = require("component")
 local term = require("term")
 local filesystem = require("filesystem") 
-local password = "passwordhere"
 
-local serversfile = ("servers.lua")
+local serversfile = ("/home/servers.lua")
 if not filesystem.exists(serversfile) then
   local serversfile = io.open(serversfile, "w")
+  serversfile:write(string.format("return {\n}"))
   serversfile:close()
 end
 
-local shortcutsfile = ("shortcuts.lua")
+local shortcutsfile = ("/home/shortcuts.lua")
 if not filesystem.exists(shortcutsfile) then
   local shortcutsfile = io.open(shortcutsfile, "w")
+  shortcutsfile:write(string.format("return {\n}"))  
   shortcutsfile:close()
 end
 
@@ -146,21 +147,48 @@ end
 
 term.clear()
 
-print("Username:")
+io.write("Username:\n")
 
-io.write()
+local loginusr = io.read()
 
-local lusername = io.read()
+local function checkPassword()
+  local file = io.open("password.lua")
+  
+  for line in file:lines() do
+    local salted,salt = line:match("^([^;]+);(.+)$")
+    salted = component.data.decode64(salted)
+    salt = component.data.decode64(salt)
+    if(salted == component.data.sha256(attempt..salt)) then
+      file:close()
+      return true
+    end
+  end
+  file:close()
+  return false
+end
 
-print("Password:")
+if filesystem.exists("/home/password.lua") then 
+  io.write("Password:\n")
+  attempt = io.read()
+  
 
-io.write()
+else
+  
+  io.write("Enter the password you want to be set:\n")
+  local password = io.read()
+  local file = io.open("password.lua","a")
+  local salt = component.data.random(16)
+  local hashed = component.data.encode64(component.data.sha256(password..salt))
+  
+  file:write(string.format("%s;%s\n",hashed,component.data.encode64(salt)))
+  file:close()
+  io.write("Password:\n")
+  attempt = io.read()
+end 
+if checkPassword(attempt) == true then
+  term.clear()  
 
-local attempt = io.read()
-
-term.clear()
-
-if attempt == password then
+  -- Main code
 
   local options = dofile("servers.lua")
 
@@ -245,6 +273,7 @@ if attempt == password then
     end
   end
 
+  local options = dofile("servers.lua")
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
 
@@ -261,18 +290,18 @@ if attempt == password then
   embeds = {  
     {
       title = "Login",
-      description = lusername .. " just logged in!",
+      description = loginusr .. " just logged in!",
       color = 5763719
     }
   },
   username = "CMP",
   avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-}
+  }
 
   internet.request(url, json.encode(contents), headers, "POST")
-  
+
   io.write()
-  
+
   while true do
 
     ::MessageStart::
@@ -458,21 +487,28 @@ if attempt == password then
       end
 
     local shortcuts = dofile("shortcuts.lua")
-    
-    for i = 1, #shortcuts do
-      if shortcuts[i].name == message then
-        message = shortcuts[i].value
-        break
-      end
+    local dissected = {}
+
+    for segment in message:gmatch("%S+") do
+      table.insert(dissected, segment)
     end
-      
+    
+    for i, segment in ipairs(dissected) do
+      for j, shortcut in ipairs(shortcuts) do
+        if segment == shortcut.name then
+          dissected[i] = shortcut.value
+          break
+        end
+      end
+    end    
+    local message = table.concat(dissected, " ")      
 
     local contents = {
       
       content = message,
-      username = "CMP" .. " - " .. lusername,
+      username = "CMP" .. " - " .. loginusr,
       avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-}
+  }
 
     internet.request(url, json.encode(contents), headers, "POST")
 
@@ -483,23 +519,26 @@ if attempt == password then
   embeds = {  
     {
       title = "Logout",
-      description = lusername .. " logged out.",
+      description = loginusr .. " logged out.",
       color = 15548997
     }
   },
   username = "CMP",
   avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-}
+  }
 
   internet.request(url, json.encode(contents), headers, "POST")
 
   term.clear()
   print("Logging out")
-  os.execute("sleep 2")
+  os.execute("sleep 1")
   term.clear()
 else
-
-print("Exiting")
-
+  term.clear()
+  print("Exiting")
+  os.execute("sleep 1")
+  term.clear()
 end
+
+
 --Main code
