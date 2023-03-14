@@ -4,7 +4,7 @@
 - T1 GPU
 - T1 CPU
 - T1 Screen
-- T2 data card (if you want password encryption)
+- T2 data card (if you want password encryption) **optional**
 - Any storage medium (floppy untested)
 
 \
