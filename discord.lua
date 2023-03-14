@@ -9,14 +9,14 @@ local component = require("component")
 local term = require("term")
 local filesystem = require("filesystem") 
 
-local serversfile = ("servers.lua")
+local serversfile = ("/home/servers.lua")
 if not filesystem.exists(serversfile) then
   local serversfile = io.open(serversfile, "w")
   serversfile:write(string.format("return {\n}"))
   serversfile:close()
 end
 
-local shortcutsfile = ("shortcuts.lua")
+local shortcutsfile = ("/home/shortcuts.lua")
 if not filesystem.exists(shortcutsfile) then
   local shortcutsfile = io.open(shortcutsfile, "w")
   shortcutsfile:write(string.format("return {\n}"))  
