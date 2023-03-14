@@ -273,6 +273,7 @@ if checkPassword(attempt) == true then
     end
   end
 
+  local options = dofile("servers.lua")
   for i, option in ipairs(options) do
     print(i .. ". " .. option.name)
 
@@ -486,14 +487,21 @@ if checkPassword(attempt) == true then
       end
 
     local shortcuts = dofile("shortcuts.lua")
-    
-    for i = 1, #shortcuts do
-      if shortcuts[i].name == message then
-        message = shortcuts[i].value
-        break
-      end
+    local dissected = {}
+
+    for segment in message:gmatch("%S+") do
+      table.insert(dissected, segment)
     end
-      
+    
+    for i, segment in ipairs(dissected) do
+      for j, shortcut in ipairs(shortcuts) do
+        if segment == shortcut.name then
+          dissected[i] = shortcut.value
+          break
+        end
+      end
+    end    
+    local message = table.concat(dissected, " ")      
 
     local contents = {
       
