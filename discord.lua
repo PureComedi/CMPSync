@@ -325,10 +325,10 @@ if checkPassword(attempt) == true then
 
     local message = io.read()
 
-      if message == "Logout" then
+      if message == "/logout" then
         break
       
-      elseif message == "Settings" then
+      elseif message == "/settings" then
         print("Select a setting to modify")
         print("1. Servers")
         print("2. Shortcuts")
