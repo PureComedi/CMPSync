@@ -486,23 +486,28 @@ if checkPassword(attempt) == true then
         io.write()
       end
 
-    local shortcuts = dofile("shortcuts.lua")
-    local dissected = {}
-
-    for segment in message:gmatch("%S+") do
-      table.insert(dissected, segment)
-    end
-    
-    for i, segment in ipairs(dissected) do
-      for j, shortcut in ipairs(shortcuts) do
-        if segment == shortcut.name then
-          dissected[i] = shortcut.value
-          break
+      for i, segment in ipairs(dissected) do
+        if dissected[1] == "/embed"
+          for i = 2 #dissected do
+            local embed_raw = table.concat(dissected, " ")
+            for embed_raw in string.gmatch(embed_raw, "[^,]+") do
+              table.insert(args, segment)
+            local title = args[1] or ""
+            local description = args[2] or ""
+            local color = args[3] or ""
+        else
+          for i, segment in ipairs(dissected) do
+            for j, shortcut in ipairs(shortcuts) do
+              if segment == shortcut.name then
+                dissected[i] = shortcut.value
+                break
+              end
+            end
+          end    
+          local message = table.concat(dissected, " ")
         end
       end
-    end    
-    local message = table.concat(dissected, " ")      
-
+  
     local contents = {
       
       content = message,
