@@ -151,42 +151,59 @@ io.write("Username:\n")
 
 local loginusr = io.read()
 
-local function checkPassword()
-  local file = io.open("password.lua")
-  
-  for line in file:lines() do
-    local salted,salt = line:match("^([^;]+);(.+)$")
-    salted = component.data.decode64(salted)
-    salt = component.data.decode64(salt)
-    if(salted == component.data.sha256(attempt..salt)) then
+local function checkPassword()  
+  if component.isAvailable("data") then  
+    local file = io.open("password.lua")
+      for line in file:lines() do
+        local salted,salt = line:match("^([^;]+);(.+)$")
+        salted = component.data.decode64(salted)
+        salt = component.data.decode64(salt)
+        if(salted == component.data.sha256(attempt..salt)) then
+          file:close()
+          return true
+        end
+      end
       file:close()
-      return true
-    end
+      return false
+  else
+    local file = io.open("password.lua")
+    local password = file:read("*a")
+      if attempt == password then
+        file:close()
+        return true
+      end
   end
-  file:close()
-  return false
 end
 
 if filesystem.exists("/home/password.lua") then 
   io.write("Password:\n")
   attempt = io.read()
-  
-
 else
-  
-  io.write("Enter the password you want to be set:\n")
-  local password = io.read()
-  local file = io.open("password.lua","a")
-  local salt = component.data.random(16)
-  local hashed = component.data.encode64(component.data.sha256(password..salt))
-  
-  file:write(string.format("%s;%s\n",hashed,component.data.encode64(salt)))
-  file:close()
-  io.write("Password:\n")
-  attempt = io.read()
+  if component.isAvailable("data") then
+    io.write("Enter the password you want to be set:\n")
+    local password = io.read()
+    local file = io.open("password.lua","a")
+    local salt = component.data.random(16)
+    local hashed = component.data.encode64(component.data.sha256(password..salt))
+    file:write(string.format("%s;%s\n",hashed,component.data.encode64(salt)))
+    file:close()
+    term.clear()
+    io.write("Password:\n")
+    attempt = io.read()
+  else
+    io.write("Enter the password you want to be set:\n")
+    local password = io.read()
+    local file = io.open("password.lua","a")
+    file:write(password)
+    file:close()
+    term.clear()
+    io.write("Password:\n")
+    attempt = io.read()
+  end
 end 
+
 if checkPassword(attempt) == true then
-  term.clear()  
+  term.clear()
 
   -- Main code
 
@@ -308,10 +325,10 @@ if checkPassword(attempt) == true then
 
     local message = io.read()
 
-      if message == "Logout" then
+      if message == "/logout" then
         break
       
-      elseif message == "Settings" then
+      elseif message == "/settings" then
         print("Select a setting to modify")
         print("1. Servers")
         print("2. Shortcuts")
