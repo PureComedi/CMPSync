@@ -486,53 +486,53 @@ if checkPassword(attempt) == true then
         io.write()
       end
 
-      for i, segment in ipairs(dissected) do
-        if dissected[1] == "/embed" then
-          for i = 2 #dissected do
-            local embed_raw = table.concat(dissected, " ")
-            for embed_raw in string.gmatch(embed_raw, "[^,]+") do
-              table.insert(args, segment)
-            end
-            local title = args[1] or ""
-            local description = args[2] or ""
-            local color = args[3] or "15548997"
-          end
-          local contents = {
-            embeds = {  
-              {
-                title
-                description
-                color
-              }
-            },
-            username = "CMP",
-            avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096",
-            }
-            
-          internet.request(url, json.encode(contents), headers, "POST")
-
-        else
-          for i, segment in ipairs(dissected) do
-            for j, shortcut in ipairs(shortcuts) do
-              if segment == shortcut.name then
-                dissected[i] = shortcut.value
-                break
-              end
-            end
-          end    
-          local message = table.concat(dissected, " ")
-        end
-      end
-  
-    local contents = {
+      local args = {}
+      local title, description, color
+      local message = table.concat(dissected, " ")
       
-      content = message,
-      username = "CMP" .. " - " .. loginusr,
-      avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
-  }
-
-    internet.request(url, json.encode(contents), headers, "POST")
-
+      if dissected[1] == "/embed" then
+        for i = 2, #dissected do
+          for arg in string.gmatch(dissected[i], "[^,]+") do
+            table.insert(args, arg)
+          end
+        end
+        title = args[1] or ""
+        description = args[2] or ""
+        color = args[3] or "15548997"
+        
+        local contents = {
+          embeds = {
+            {
+              title = title,
+              description = description,
+              color = color
+            }
+          },
+          username = "CMP",
+          avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096",
+        }
+        
+        internet.request(url, json.encode(contents), headers, "POST")
+      else
+        for i, segment in ipairs(dissected) do
+          for j, shortcut in ipairs(shortcuts) do
+            if segment == shortcut.name then
+              dissected[i] = shortcut.value
+              break
+            end
+          end
+        end
+        message = table.concat(dissected, " ")
+        
+        local contents = {
+          content = message,
+          username = "CMP" .. " - " .. loginusr,
+          avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
+        }
+        
+        internet.request(url, json.encode(contents), headers, "POST")
+      end
+            
     io.write()
   end
 
