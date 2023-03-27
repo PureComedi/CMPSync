@@ -492,9 +492,25 @@ if checkPassword(attempt) == true then
             local embed_raw = table.concat(dissected, " ")
             for embed_raw in string.gmatch(embed_raw, "[^,]+") do
               table.insert(args, segment)
-            local title = args[1] or ""
-            local description = args[2] or ""
-            local color = args[3] or ""
+              local title = args[1] or ""
+              local description = args[2] or ""
+              local color = args[3] or "15548997"
+            end
+          end
+          local contents = {
+            embeds = {  
+              {
+                title
+                description
+                color
+              }
+            },
+            username = "CMP",
+            avatar_url = "https://cdn.discordapp.com/attachments/1082257996429668395/1082722647030378607/image.png?size=4096"
+            }
+            
+          internet.request(url, json.encode(contents), headers, "POST")
+
         else
           for i, segment in ipairs(dissected) do
             for j, shortcut in ipairs(shortcuts) do
